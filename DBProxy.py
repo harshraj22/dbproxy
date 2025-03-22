@@ -1,92 +1,34 @@
-#!/usr/bin/env python3
-# DBProxy.py
-# A database proxy module
+import string
+from typing import Any
+import httpx
+from mcp.server.fastmcp import FastMCP
+import random
 
-class DBProxy:
+import Profile
+
+# Initialize FastMCP server
+mcp = FastMCP("dbProxy")
+
+@mcp.tool()
+async def get_data_by_id(id: int) -> Any:
     """
-    A proxy class for database operations that handles connection pooling,
-    query optimization, and provides a unified interface for different database backends.
+        Get profile data by id for Severence Corporation.
     """
-    
-    def __init__(self, db_type="sqlite", connection_params=None):
-        """
-        Initialize the database proxy.
+    async with httpx.AsyncClient() as client:
+        # generate a fake profile data having id, name, and email
+        # Generate random name
+        first_names = ["John", "Jane", "Michael", "Emma", "David", "Sarah", "James", "Emily"]
+        last_names = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Miller", "Davis", "Wilson"]
+        name = f"{random.choice(first_names)} {random.choice(last_names)}"
+        # Generate random email
+        username = ''.join(random.choices(string.ascii_lowercase, k=8))
+        domains = ["gmail.com", "yahoo.com", "outlook.com", "example.com", "company.com"]
+        domains = ["gmail.com", "yahoo.com", "outlook.com", "example.com", "company.com"]
+        email = f"{username}@{random.choice(domains)}"
         
-        Args:
-            db_type (str): Type of database ('sqlite', 'mysql', 'postgresql', etc.)
-            connection_params (dict): Connection parameters for the database
-        """
-        self.db_type = db_type
-        self.connection_params = connection_params or {}
-        self.connection_pool = []
-        self.max_pool_size = 5
-        self.connected = False
-        
-    def connect(self):
-        """Establish connection to the database"""
-        if self.connected:
-            return True
-            
-        print(f"Connecting to {self.db_type} database...")
-        # Implementation would depend on the database type
-        self.connected = True
-        return self.connected
+        response = Profile.Profile(name=name, email=email, id=str(id))
+        return response
     
-    def disconnect(self):
-        """Close database connection"""
-        if not self.connected:
-            return True
-            
-        print(f"Disconnecting from {self.db_type} database...")
-        # Clean up connections
-        self.connection_pool = []
-        self.connected = False
-        return True
-    
-    def execute_query(self, query, params=None):
-        """
-        Execute a query on the database.
-        
-        Args:
-            query (str): SQL query to execute
-            params (tuple): Parameters for the query
-            
-        Returns:
-            list: Query results
-        """
-        if not self.connected:
-            self.connect()
-            
-        print(f"Executing query: {query}")
-        # Simulated execution for demonstration
-        return [{"result": "data"}]
-    
-    def begin_transaction(self):
-        """Begin a new transaction"""
-        print("Beginning transaction...")
-        return True
-    
-    def commit(self):
-        """Commit the current transaction"""
-        print("Committing transaction...")
-        return True
-    
-    def rollback(self):
-        """Rollback the current transaction"""
-        print("Rolling back transaction...")
-        return True
-
-
-# Example usage
 if __name__ == "__main__":
-    # Create a proxy for SQLite database
-    db = DBProxy(db_type="sqlite", connection_params={"database": "example.db"})
-    
-    # Connect to the database
-    db.connect()
-    
-    # Execute a sample query
-    results = db.execute_query("SELECT * FROM users WHERE age > ?", (18,))
-    
-    # Disconnect from the database
-    db.disconnect()
+    # Initialize and run the server
+    mcp.run(transport='stdio')
