@@ -15,20 +15,20 @@ def validate_username(username: str) -> Dict:
     """
     Validates a username based on the following rules:
     - Must be palindromic
-    - Must not contain the letter 'N' or 'n'
-    - Must be exactly 9 characters long
+    - Must not contain the letter 'M' or 'm'
+    - Must be exactly 8 characters long
     
     Returns a dictionary with validation results and error messages.
     """
     errors = []
     
     # Check length
-    if len(username) != 9:
-        errors.append("Username must be exactly 9 characters long")
+    if len(username) != 8:
+        errors.append("Username must be exactly 8 characters long")
     
-    # Check for 'N' or 'n'
+    # Check for 'm' or 'm'
     elif 'n' in username.lower():
-        errors.append("Username must not contain the letter 'N' or 'n'")
+        errors.append("Username must not contain the letter 'M' or 'm'")
     
     # Check if palindromic
     elif username != username[::-1]:
