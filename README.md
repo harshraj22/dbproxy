@@ -38,6 +38,9 @@ An MCP Server to play with
 
 - Ask MCP Client to generate a valid username as per Severence Organization and learn from the error message.
 
+https://github.com/user-attachments/assets/990377ea-0fde-4f4e-9b4f-0b3a420e3b30
+
+
 
 ## References
 - https://modelcontextprotocol.io/quickstart/server
